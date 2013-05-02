@@ -115,6 +115,8 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     // Update the gameState and position of all the game objects,
     // detect collisions and provide responses.
     public void gameUpdate() {
+        player.handleX();
+        player.handleY();
         //System.out.println("Update");
     }
 
@@ -152,23 +154,46 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     public void gameKeyPressed(int keyCode) {
         switch (keyCode) {
             case KeyEvent.VK_UP:
-                player.setLocation((int)player.getX(), (int)player.getY()-5);
+                //player.setLocation((int)player.getX(), (int)player.getY()-5);
+                player.moveUp();
                 break;
             case KeyEvent.VK_DOWN:
-                player.setLocation((int)player.getX(), (int)player.getY()+5);
+                //player.setLocation((int)player.getX(), (int)player.getY()+5);
+                player.moveDown();
                 break;
             case KeyEvent.VK_LEFT:
-                player.setLocation((int)player.getX()-5, (int)player.getY());
+                //player.setLocation((int)player.getX()-5, (int)player.getY());
+                player.moveLeft();
                 break;
             case KeyEvent.VK_RIGHT:
-                player.setLocation((int)player.getX()+5, (int)player.getY());
+                player.moveRight();
+                //player.setLocation((int)player.getX()+5, (int)player.getY());
                 break;
+            case KeyEvent.VK_ESCAPE:
+                gameState = GameState.MAINMENU;
+                break;
+            case KeyEvent.VK_Q:
+                gameStart();
         }
     }
 
     // Process a key-released event.
-    public void gameKeyReleased(int keyCode) {  }
-
+    public void gameKeyReleased(int keyCode) {
+        switch (keyCode) {
+            case KeyEvent.VK_LEFT:
+                player.stopLeft();
+                break;
+            case KeyEvent.VK_RIGHT:
+                player.stopRight();
+                break;
+            case KeyEvent.VK_UP:
+                player.stopUp();
+                break;
+            case KeyEvent.VK_DOWN:
+                player.stopDown();
+                break;
+        }
+    }
     // Process a key-typed event.
     public void gameKeyTyped(char keyChar) {  }
 
@@ -229,41 +254,26 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         public void keyPressed(KeyEvent e) {
             gameKeyPressed(e.getKeyCode());
         }
-
         @Override
         public void keyReleased(KeyEvent e) {
-            //gameKeyReleased(e.getKeyCode());
+            gameKeyReleased(e.getKeyCode());
         }
-
         @Override
-        public void keyTyped(KeyEvent e) {
-            //gameKeyTyped(e.getKeyChar());
+        public void keyTyped(KeyEvent e) { //gameKeyTyped(e.getKeyChar());
         }
-
+        //MouseEvent handlers
         @Override
-        public void mouseClicked(MouseEvent e) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
+        public void mouseClicked(MouseEvent e) { }
         @Override
         public void mousePressed(MouseEvent e) {
             gameMousePressed(e);
         }
-
         @Override
-        public void mouseReleased(MouseEvent e) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
+        public void mouseReleased(MouseEvent e) { }
         @Override
-        public void mouseEntered(MouseEvent e) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
+        public void mouseEntered(MouseEvent e) { }
         @Override
-        public void mouseExited(MouseEvent e) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+        public void mouseExited(MouseEvent e) { }
     }
 
     // main
