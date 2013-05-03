@@ -56,7 +56,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     // Initialize all the game objects, run only once in the constructor of the main class.
     public void gameInit() {
         // ......
-        player = new Player(0,0,50,50);
+        player = new Player();
         playerBox = new PlayerBox(100,100,50,50);
         gameState = GameState.INITIALIZED;
 
@@ -85,7 +85,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     private void gameLoop() {
         // Regenerate the game objects for a new game
         // ......
-        player = new Player(0,0,50,50);
+        player = new Player();
         playerBox = new PlayerBox(100,100,50,50);
         gameState = GameState.PLAYING;
 
@@ -139,6 +139,11 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
             case PLAYING:
                 g2d.fill(player);
                 g2d.fill(playerBox);
+                /*if(player.turnedLeft()){
+                    //If the player is turned left make the image mirrored so it looks right.
+                    g2d.drawImage(player.getImage(),(int)player.getMaxX(),(int)player.getMinY(),(int)player.getMinX(),(int)player.getMaxY(), 0, 0, (int)player.getWidth(),(int)player.getHeight(),null);
+                }*/
+                g2d.drawImage(player.getImage(),(int)player.getX(),(int)player.getY(),null);
                 break;
             case PAUSED:
                 // ......

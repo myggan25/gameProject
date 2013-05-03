@@ -1,6 +1,11 @@
 package gameProject;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +15,13 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public class Player extends GameObject{
-    final int startVelocity = 20;
+    final int startVelocity = 5;
+    private String sprite = "LuffySpriteSheet.png";
+    private BufferedImage image;
+    private int imageCols = 5;
+    private int imageRows = 6;
+    private BufferedImage[][] sprites;
+    private Wall walls[];
 
     public enum StatusX {
         LEFTHOLD, LEFTRELEASED, RIGHTHOLD, RIGHTRELEASED, STILL;
@@ -24,19 +35,75 @@ public class Player extends GameObject{
     protected StatusX statusX;
     protected StatusY statusY;
 
+    public Player(){
+        this(0,0,50,50);//these are the values that fit LuffySprites.png
+    }
+
     public Player(Point p, Dimension d) {
-        super(p, d);
+        super(p,d);
         velocity = new Velocity(0.0, 0.0);
         acceleration = new Acceleration(0.0, 0.0, 0.01);
         statusX = StatusX.STILL;
         statusY = StatusY.STILL;
+        sprites = new BufferedImage[imageRows][imageCols];
+        //ImageIcon ii = new ImageIcon(this.getClass().getResource(sprite));
+        //image = ii.getImage();
+        try {
+            image = ImageIO.read(new File(sprite));
+        } catch (IOException ex) {
+            System.out.println("FAIL");
+        }
+        for(int i=0; i<imageRows; i++){
+            for(int j=0; j<imageCols; j++){
+                sprites[i][j] = image.getSubimage(j*width,i*height,width,height);
+                //sprites[i] = image.getSubimage(i*width,0,width,height);
+            }
+
+        }
+    }
+    public Player(int x, int y, int width, int height) {
+        this(new Point(x,y),new Dimension(width,height));
     }
 
-    public Player(int x, int y, int width, int height) {
-        super(x, y, width, height);
-        velocity = new Velocity(0.0, 0.0);
-        acceleration = new Acceleration(0.0, 0.0, 0.01);
-        statusX = StatusX.STILL;
+
+    public Image getImage(){
+        if(statusX==StatusX.STILL && statusY==StatusY.STILL){
+            return sprites[0][1];
+        }
+        else if(statusY == StatusY.UPHOLD){
+            return sprites[2][0].getSubimage(0,0,width,height-3);
+        }
+        else if(statusY == StatusY.UPRELEASED){
+            return sprites[2][2].getSubimage(0,0,width,height-3);
+        }
+        else if(statusX == StatusX.LEFTHOLD){
+            return sprites[1][3];
+        }
+        else if(statusX == StatusX.LEFTRELEASED){
+            return sprites[1][1];
+        }
+        else if(statusX == StatusX.RIGHTHOLD){
+            return sprites[3][0];//.getSubimage(0,0,width,height-3);
+        }
+        else if(statusX == StatusX.RIGHTRELEASED){
+            return sprites[3][1];//.getSubimage(0,0,width,height-3);
+        }
+        else if(statusY == StatusY.DOWNHOLD){
+            return sprites[0][0];
+        }
+        else if(statusY == StatusY.DOWNRELEASED){
+            return sprites[0][2];
+        }
+        else{
+            return sprites[4][1];
+        }
+    }
+    public boolean turnedLeft(){
+        if(statusX == StatusX.LEFTHOLD || statusX == StatusX.LEFTRELEASED ){
+            return true;
+        }
+        else
+            return false;
     }
     public void moveLeft(){
         statusX = StatusX.LEFTHOLD;
