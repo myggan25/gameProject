@@ -1,5 +1,8 @@
 package gameProject;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Robin
@@ -11,10 +14,12 @@ public class StopAndRemoveBehavior implements StopBehavior {
     private GameObject currentObj;
     private int counterToDelete;
     private static boolean countedOne = false;
+    private AudioStream audioStream;
 
-    public StopAndRemoveBehavior(GameObject obj, int waitTimeForRemove){
+    public StopAndRemoveBehavior(GameObject obj, int waitTimeForRemove, AudioStream audioStream){
         this.currentObj = obj;
         counterToDelete = waitTimeForRemove;
+        this.audioStream = audioStream;
     }
     @Override
     public void stop(GameObject obj){
@@ -37,6 +42,7 @@ public class StopAndRemoveBehavior implements StopBehavior {
             }
         }
         else if( counterToDelete == 0){
+            AudioPlayer.player.start(audioStream);
             currentObj.setBounds(0, 0, 0, 0);
         }
     }

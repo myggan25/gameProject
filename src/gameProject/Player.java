@@ -1,11 +1,14 @@
 package gameProject;
 
+import sun.audio.*;
+
 import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -22,8 +25,6 @@ public class Player extends GameObject{
     private int imageCols = 5;
     private int imageRows = 6;
     private BufferedImage[][] sprites;
-
-
     public enum StatusX {
         LEFTHOLD, LEFTRELEASED, RIGHTHOLD, RIGHTRELEASED, STILL;
     }
@@ -47,8 +48,7 @@ public class Player extends GameObject{
         statusX = StatusX.STILL;
         statusY = StatusY.STILL;
         sprites = new BufferedImage[imageRows][imageCols];
-        //ImageIcon ii = new ImageIcon(this.getClass().getResource(sprite));
-        //image = ii.getImage();
+
         try {
             image = ImageIO.read(new File(sprite));
         } catch (IOException ex) {

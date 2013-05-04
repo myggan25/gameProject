@@ -1,5 +1,8 @@
 package gameProject;
 
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.lang.*;
 import java.awt.*;
@@ -18,6 +21,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     private GameStartMenu startMenu;
     private Player player;
     private PlayerBox playerBox;
+    private ArrayList<Bullet> bullets;
     /*private ArrayList<Wall> walls;
     private ArrayList<Gravel> gravels;
     */
@@ -93,6 +97,8 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         // Regenerate the game objects for a new game
         // ......
         player = new Player();
+        bullets = new ArrayList<Bullet>();
+        //bullet = new Bullet(200,200);
         //playerBox = new PlayerBox(100,100,100,100);
         gameState = gameState.PLAYING;
         //mapBlocks.add(new Wall(new Point(300, 300), new Dimension(200, 200)));
@@ -129,7 +135,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
 
     // Update the gameState and position of all the game objects,
     // detect collisions and provide responses.
-    public void gameUpdate() {
+    public synchronized void gameUpdate() {
         player.handleX();
         player.handleY();
         //playerBox.jumpThrough(player);
@@ -171,8 +177,8 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                     //If the player is turned left make the image mirrored so it looks right.
                     g2d.drawImage(player.getImage(),(int)player.getMaxX(),(int)player.getMinY(),(int)player.getMinX(),(int)player.getMaxY(), 0, 0, (int)player.getWidth(),(int)player.getHeight(),null);
                 }*/
-                g2d.drawImage(player.getImage(),(int)player.getX(),(int)player.getY(),null);
-                g2d.setColor(Color.RED);
+                g2d.drawImage(player.getImage(), (int) player.getX(), (int) player.getY(), null);
+
                 /*for(Wall wall : walls ){
                     g2d.fill(new RoundRectangle2D.Float((float) wall.getX(), (float) wall.getY(), (float) wall.getWidth(), (float) wall.getHeight(), 50, 50));
                     //g2d.fill(wall);
@@ -191,6 +197,15 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                         g2d.fill(mapBlock);
                     }
                 }
+                g2d.setColor(Color.YELLOW);
+                g2d.setStroke(new BasicStroke(5));
+                if(!bullets.isEmpty()){
+                    for(Bullet bullet : bullets){
+                        g2d.draw(new Line2D.Double(bullet.getMovingX(),bullet.getMovingY(),
+                                bullet.getMovingX(),bullet.getMovingY()));
+                    }
+                }
+                //g2d.draw(new Line2D.Double(bullet.x,bullet.y,bullet.x,bullet.y));
                 break;
             case PAUSED:
                 // ......
@@ -262,6 +277,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
             }
         }
         else if(gameState == GameState.PLAYING){
+            bullets.add(new Bullet(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2, (double)e.getX(),(double)e.getY()));
             //playerBox.setLocation(e.getX()-(int)playerBox.getWidth()/2,e.getY()-(int)playerBox.getHeight()/2);
         }
     }
