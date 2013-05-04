@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,13 +16,13 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class Player extends GameObject{
-    final int startVelocity = 5;
+    final int startVelocity = 3;
     private String sprite = "LuffySpriteSheet.png";
     private BufferedImage image;
     private int imageCols = 5;
     private int imageRows = 6;
     private BufferedImage[][] sprites;
-    private Wall walls[];
+
 
     public enum StatusX {
         LEFTHOLD, LEFTRELEASED, RIGHTHOLD, RIGHTRELEASED, STILL;
@@ -36,7 +37,7 @@ public class Player extends GameObject{
     protected StatusY statusY;
 
     public Player(){
-        this(0,0,50,50);//these are the values that fit LuffySprites.png
+        this(0,0,50,50);//these are the values that fit LuffySpriteSheet.png
     }
 
     public Player(Point p, Dimension d) {

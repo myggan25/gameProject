@@ -1,8 +1,10 @@
 package gameProject;
 
+import java.awt.geom.RoundRectangle2D;
 import java.lang.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class GameMain extends JFrame {     // main class for the game as a Swing application
@@ -16,12 +18,15 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     private GameStartMenu startMenu;
     private Player player;
     private PlayerBox playerBox;
-
+    /*private ArrayList<Wall> walls;
+    private ArrayList<Gravel> gravels;
+    */
+    private ArrayList<MapBlock> mapBlocks;
 
     // Enumeration for the states of the game.
-    static enum GameState {
-        INITIALIZED, MAINMENU, PLAYING, PAUSED, GAMEOVER, DESTROYED
-    }
+ /*   static enum GameState {
+
+    }*/
     static GameState gameState;   // current State of the game
 
     // Define instance variables for the game objects
@@ -46,7 +51,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         drawMainMenu();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.pack();
-        this.setTitle("MY GAME");
+        this.setTitle("Luffy gejmar");
         this.setVisible(true);
 
     }
@@ -56,9 +61,11 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     // Initialize all the game objects, run only once in the constructor of the main class.
     public void gameInit() {
         // ......
-        player = new Player();
-        playerBox = new PlayerBox(100,100,50,50);
+        //player = new Player();
+        //playerBox = new PlayerBox(100,100,50,50);
+        mapBlocks = new ArrayList<MapBlock>();
         gameState = GameState.INITIALIZED;
+
 
     }
 
@@ -68,7 +75,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     }
 
     // To start and re-start the game.
-    public void gameStart() {
+    public  void gameStart() {
         // Create a new thread
         Thread gameThread =  new Thread() {
             // Override run() to provide the running behavior of this thread.
@@ -86,9 +93,17 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         // Regenerate the game objects for a new game
         // ......
         player = new Player();
-        playerBox = new PlayerBox(100,100,50,50);
-        gameState = GameState.PLAYING;
-
+        //playerBox = new PlayerBox(100,100,100,100);
+        gameState = gameState.PLAYING;
+        //mapBlocks.add(new Wall(new Point(300, 300), new Dimension(200, 200)));
+        //mapBlocks.add(new Gravel(new Point(100,100), new Dimension(50,50)));
+        for(int i=0; i<CANVAS_WIDTH;i+=50){
+            for(int j=0; j<CANVAS_HEIGHT;j+=50){
+                if(!(i==0 && j==0)){
+                    mapBlocks.add(new Gravel(new Point(i,j), new Dimension(50,50)));
+                }
+            }
+        }
         // Game loop
         long beginTime, timeTaken, timeLeft;
         while (true) {
@@ -117,7 +132,20 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     public void gameUpdate() {
         player.handleX();
         player.handleY();
+        //playerBox.jumpThrough(player);
+        //playerBox.cannotIntersect(player);
+        /*for(Wall wall : walls){
+            wall.block(player);
+        }
+        for(Gravel gravel : gravels){
+            gravel.block(player);
+        }*/
+
         //System.out.println("Update");
+        for(MapBlock mapBlock : mapBlocks){
+            mapBlock.performStop(player);
+        }
+        StopAndRemoveBehavior.resetCounted();
     }
 
     // Refresh the display. Called back via rapaint(), which invoke the paintComponent().
@@ -137,13 +165,32 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                 }
                 break;
             case PLAYING:
-                g2d.fill(player);
-                g2d.fill(playerBox);
+                //g2d.fill(player);
+                //g2d.fill(playerBox);
                 /*if(player.turnedLeft()){
                     //If the player is turned left make the image mirrored so it looks right.
                     g2d.drawImage(player.getImage(),(int)player.getMaxX(),(int)player.getMinY(),(int)player.getMinX(),(int)player.getMaxY(), 0, 0, (int)player.getWidth(),(int)player.getHeight(),null);
                 }*/
                 g2d.drawImage(player.getImage(),(int)player.getX(),(int)player.getY(),null);
+                g2d.setColor(Color.RED);
+                /*for(Wall wall : walls ){
+                    g2d.fill(new RoundRectangle2D.Float((float) wall.getX(), (float) wall.getY(), (float) wall.getWidth(), (float) wall.getHeight(), 50, 50));
+                    //g2d.fill(wall);
+                }
+                g2d.setColor(Color.DARK_GRAY);
+                for(Gravel gravel : gravels){
+                    g2d.fill(gravel);
+                }*/
+                for(MapBlock mapBlock : mapBlocks){
+                    if(mapBlock instanceof Wall){
+                        g2d.setColor(Color.BLUE);
+                        g2d.fill(new RoundRectangle2D.Float((float) mapBlock.getX(), (float) mapBlock.getY(), (float) mapBlock.getWidth(), (float) mapBlock.getHeight(), 50, 50));
+                    }
+                    else if(mapBlock instanceof Gravel){
+                        g2d.setColor(Color.DARK_GRAY);
+                        g2d.fill(mapBlock);
+                    }
+                }
                 break;
             case PAUSED:
                 // ......
@@ -154,8 +201,6 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         }
         // ......
     }
-
-    // Process a key-pressed event. Update the current gameState.
     public void gameKeyPressed(int keyCode) {
         switch (keyCode) {
             case KeyEvent.VK_UP:
@@ -179,9 +224,9 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                 break;
             case KeyEvent.VK_Q:
                 gameStart();
+                break;
         }
     }
-
     // Process a key-released event.
     public void gameKeyReleased(int keyCode) {
         switch (keyCode) {
@@ -205,7 +250,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     public void gameMousePressed(MouseEvent e){
         if(gameState == GameState.MAINMENU){
             for ( StartMenuItem item : startMenu.getMenuItems()){
-                System.out.println(e.getX()+" "+e.getY());
+               // System.out.println(e.getX()+" "+e.getY());
                 if(item.contains(e.getPoint()) && item.toString().equals("start")){
                     gameStart();
                 }
@@ -218,9 +263,10 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
             }
         }
         else if(gameState == GameState.PLAYING){
-            playerBox.setLocation(e.getX()-(int)player.getWidth()/2,e.getY()-(int)player.getHeight()/2);
+            //playerBox.setLocation(e.getX()-(int)playerBox.getWidth()/2,e.getY()-(int)playerBox.getHeight()/2);
         }
     }
+
     // Other methods
     // ......
     private void drawMainMenu(){

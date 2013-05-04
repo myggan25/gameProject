@@ -6,14 +6,15 @@ import java.awt.*;
  * Created with IntelliJ IDEA.
  * User: Robin
  * Date: 5/4/13
- * Time: 1:04 AM
+ * Time: 6:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Wall extends MapBlock{
+public class Gravel extends MapBlock{
 
-    public Wall(Point p, Dimension d) {
+    public Gravel(Point p, Dimension d) {
         super(p, d);
-        stopBehavior = new StopForeverBehavior(this);
+        stopBehavior = new StopAndRemoveBehavior(this,20);
     }
+
 
 }
