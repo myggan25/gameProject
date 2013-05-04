@@ -250,7 +250,6 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     public void gameMousePressed(MouseEvent e){
         if(gameState == GameState.MAINMENU){
             for ( StartMenuItem item : startMenu.getMenuItems()){
-               // System.out.println(e.getX()+" "+e.getY());
                 if(item.contains(e.getPoint()) && item.toString().equals("start")){
                     gameStart();
                 }
