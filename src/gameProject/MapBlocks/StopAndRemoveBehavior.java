@@ -1,7 +1,10 @@
-package gameProject;
+package gameProject.MapBlocks;
 
+import gameProject.GameObject;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
+
+import javax.sound.sampled.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,10 +45,14 @@ public class StopAndRemoveBehavior implements StopBehavior {
             }
         }
         else if( counterToDelete == 0){
-            AudioPlayer.player.start(audioStream);
             currentObj.setBounds(0, 0, 0, 0);
+            play();
         }
     }
+    private void play(){
+        AudioPlayer.player.start(audioStream);
+    }
+
     public static void resetCounted(){
         countedOne = false;
     }

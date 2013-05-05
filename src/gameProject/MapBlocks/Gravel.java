@@ -1,11 +1,10 @@
-package gameProject;
-
-import sun.audio.AudioStream;
+package gameProject.MapBlocks;
 
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import sun.audio.AudioStream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,17 +14,17 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class Gravel extends MapBlock{
-    AudioStream as;
+    private AudioStream audioStream;
 
     public Gravel(Point p, Dimension d) {
         super(p, d);
         try{
             InputStream in = new FileInputStream("dig.wav");
-            as = new AudioStream(in);
+            audioStream = new AudioStream(in);
         }catch (IOException ex){
             System.out.println("FAIL");
         }
-        stopBehavior = new StopAndRemoveBehavior(this,20,as);
+        stopBehavior = new StopAndRemoveBehavior(this,20,audioStream);
 
     }
 

@@ -1,4 +1,6 @@
-package gameProject;
+package gameProject.MapBlocks;
+
+import gameProject.GameObject;
 
 import java.awt.*;
 
@@ -9,7 +11,7 @@ import java.awt.*;
  * Time: 7:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MapBlock extends GameObject{
+public class MapBlock extends GameObject {
     protected StopBehavior stopBehavior;
 
     public MapBlock(Point p, Dimension d){

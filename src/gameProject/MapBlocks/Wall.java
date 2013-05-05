@@ -1,4 +1,4 @@
-package gameProject;
+package gameProject.MapBlocks;
 
 import java.awt.*;
 

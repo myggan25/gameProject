@@ -1,4 +1,6 @@
-package gameProject;
+package gameProject.MapBlocks;
+
+import gameProject.GameObject;
 
 /**
  * Created with IntelliJ IDEA.

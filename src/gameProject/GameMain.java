@@ -1,8 +1,11 @@
 package gameProject;
 
+import gameProject.MapBlocks.Gravel;
+import gameProject.MapBlocks.MapBlock;
+import gameProject.MapBlocks.StopAndRemoveBehavior;
+import gameProject.MapBlocks.Wall;
+
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.lang.*;
 import java.awt.*;
@@ -18,6 +21,10 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     static final int UPDATE_RATE = 60;    // number of game update per second
     static final long UPDATE_PERIOD = 1000000000L / UPDATE_RATE;  // nanoseconds
     // ......
+
+    static GameState gameState;   // current State of the game
+
+    // Define instance variables for the game objects
     private GameStartMenu startMenu;
     private Player player;
     private PlayerBox playerBox;
@@ -26,16 +33,6 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     private ArrayList<Gravel> gravels;
     */
     private ArrayList<MapBlock> mapBlocks;
-
-    // Enumeration for the states of the game.
- /*   static enum GameState {
-
-    }*/
-    static GameState gameState;   // current State of the game
-
-    // Define instance variables for the game objects
-    // ......
-    // ......
 
     // Handle for the custom drawing panel
     private GameCanvas canvas;
@@ -152,6 +149,12 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
             mapBlock.performStop(player);
         }
         StopAndRemoveBehavior.resetCounted();
+        if(!bullets.isEmpty()){
+            for(Bullet bullet : bullets){
+                bullet.closeInToTarget();
+            }
+        }
+
     }
 
     // Refresh the display. Called back via rapaint(), which invoke the paintComponent().
@@ -203,6 +206,8 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                     for(Bullet bullet : bullets){
                         g2d.draw(new Line2D.Double(bullet.getMovingX(),bullet.getMovingY(),
                                 bullet.getMovingX(),bullet.getMovingY()));
+                        /*g2d.draw(new Line2D.Double(bullet.getMovingX(),bullet.getMovingY(),
+                                bullet.getTargetX(),bullet.getTargetY()));*/
                     }
                 }
                 //g2d.draw(new Line2D.Double(bullet.x,bullet.y,bullet.x,bullet.y));
@@ -286,9 +291,9 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     // ......
     private void drawMainMenu(){
         startMenu = new GameStartMenu();
-        startMenu.addMenuItem(new StartMenuItem(CANVAS_WIDTH/2,CANVAS_HEIGHT/4,100,50,"start"));
-        startMenu.addMenuItem(new StartMenuItem(CANVAS_WIDTH/2,2*CANVAS_HEIGHT/4,100,50,"level"));
-        startMenu.addMenuItem(new StartMenuItem(CANVAS_WIDTH/2,3*CANVAS_HEIGHT/4,100,50,"exit"));
+        startMenu.addMenuItem(new StartMenuItem(CANVAS_WIDTH/6,10,400,100,"start"));
+        startMenu.addMenuItem(new StartMenuItem(CANVAS_WIDTH/6,2*CANVAS_HEIGHT/6,400,100,"level"));
+        startMenu.addMenuItem(new StartMenuItem(CANVAS_WIDTH/6,4*CANVAS_HEIGHT/6,400,100,"exit"));
         gameState = GameState.MAINMENU;
 
     }
