@@ -6,6 +6,7 @@ import gameProject.MapBlocks.StopAndRemoveBehavior;
 import gameProject.MapBlocks.Wall;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.lang.*;
 import java.awt.*;
@@ -103,7 +104,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         for(int i=0; i<CANVAS_WIDTH;i+=50){
             for(int j=0; j<CANVAS_HEIGHT;j+=50){
                 if(!(i==0 && j==0)){
-                    mapBlocks.add(new Gravel(new Point(i,j), new Dimension(50,50)));
+                    mapBlocks.add(new Gravel(new Point2D.Double(i,j), new Dimension(50,50)));
                 }
             }
         }
@@ -147,6 +148,11 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         //System.out.println("Update");
         for(MapBlock mapBlock : mapBlocks){
             mapBlock.performStop(player);
+            if(!bullets.isEmpty()){
+                for(Bullet bullet : bullets){
+                    mapBlock.performStop(bullet);
+                }
+            }
         }
         StopAndRemoveBehavior.resetCounted();
         if(!bullets.isEmpty()){
@@ -204,8 +210,9 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                 g2d.setStroke(new BasicStroke(5));
                 if(!bullets.isEmpty()){
                     for(Bullet bullet : bullets){
-                        g2d.draw(new Line2D.Double(bullet.getMovingX(),bullet.getMovingY(),
-                                bullet.getMovingX(),bullet.getMovingY()));
+                        g2d.draw(bullet);
+                        //g2d.draw(new Line2D.Double(bullet.getX(),bullet.getY(),
+                        //        bullet.getgX(),bullet.getY()));
                         /*g2d.draw(new Line2D.Double(bullet.getMovingX(),bullet.getMovingY(),
                                 bullet.getTargetX(),bullet.getTargetY()));*/
                     }
@@ -282,7 +289,9 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
             }
         }
         else if(gameState == GameState.PLAYING){
-            bullets.add(new Bullet(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2, (double)e.getX(),(double)e.getY()));
+            bullets.add(new Bullet(new Point2D.Double(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2),
+                    new Point2D.Double((double)e.getX(),(double)e.getY())));
+            //bullets.add(new Bullet(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2, (double)e.getX(),(double)e.getY()));
             //playerBox.setLocation(e.getX()-(int)playerBox.getWidth()/2,e.getY()-(int)playerBox.getHeight()/2);
         }
     }

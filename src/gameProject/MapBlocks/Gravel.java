@@ -1,6 +1,7 @@
 package gameProject.MapBlocks;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +17,7 @@ import sun.audio.AudioStream;
 public class Gravel extends MapBlock{
     private AudioStream audioStream;
 
-    public Gravel(Point p, Dimension d) {
+    public Gravel(Point2D.Double p, Dimension d) {
         super(p, d);
         try{
             InputStream in = new FileInputStream("dig.wav");

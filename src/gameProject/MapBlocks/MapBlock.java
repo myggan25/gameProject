@@ -3,6 +3,7 @@ package gameProject.MapBlocks;
 import gameProject.GameObject;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,10 +15,10 @@ import java.awt.*;
 public class MapBlock extends GameObject {
     protected StopBehavior stopBehavior;
 
-    public MapBlock(Point p, Dimension d){
+    public MapBlock(Point2D.Double p, Dimension d){
         super(p,d);
     }
-    public MapBlock(Point p){
+    public MapBlock(Point2D.Double p){
         this(p,new Dimension(50,50));
     }
     public void performStop(GameObject obj){

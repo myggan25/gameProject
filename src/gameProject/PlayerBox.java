@@ -2,6 +2,7 @@ package gameProject;
 
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,13 +14,13 @@ import java.awt.*;
 public class PlayerBox extends GameObject{
     final private int powerRestoretime = 100;
     private int powerRestoreCounter;
-    public PlayerBox(Point p, Dimension d) {
+    public PlayerBox(Point2D.Double p, Dimension d) {
         super(p, d);
         powerRestoreCounter = 0;
     }
 
-    public PlayerBox(int x, int y, int width, int height) {
-        super(x, y, width, height);
+    public PlayerBox(double x, double y, double width, double height) {
+        this(new Point2D.Double(x,y),new Dimension((int)width,(int)height));
     }
     public int getPowerRestoreCounter(){
         return powerRestoreCounter;

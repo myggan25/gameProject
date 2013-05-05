@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.*;
@@ -41,7 +42,7 @@ public class Player extends GameObject{
         this(0,0,50,50);//these are the values that fit LuffySpriteSheet.png
     }
 
-    public Player(Point p, Dimension d) {
+    public Player(Point2D.Double p, Dimension d) {
         super(p,d);
         velocity = new Velocity(0.0, 0.0);
         acceleration = new Acceleration(0.0, 0.0, 0.01);
@@ -56,14 +57,14 @@ public class Player extends GameObject{
         }
         for(int i=0; i<imageRows; i++){
             for(int j=0; j<imageCols; j++){
-                sprites[i][j] = image.getSubimage(j*width,i*height,width,height);
+                sprites[i][j] = image.getSubimage(j*(int)width,i*(int)height,(int)width,(int)height);
                 //sprites[i] = image.getSubimage(i*width,0,width,height);
             }
 
         }
     }
-    public Player(int x, int y, int width, int height) {
-        this(new Point(x,y),new Dimension(width,height));
+    public Player(double x, double y, double width, double height) {
+        this(new Point2D.Double(x,y),new Dimension((int)width,(int)height));
     }
 
 
@@ -72,10 +73,10 @@ public class Player extends GameObject{
             return sprites[0][1];
         }
         else if(statusY == StatusY.UPHOLD){
-            return sprites[2][0].getSubimage(0,0,width,height-3);
+            return sprites[2][0];//.getSubimage(0,0,width,height-3);
         }
         else if(statusY == StatusY.UPRELEASED){
-            return sprites[2][2].getSubimage(0,0,width,height-3);
+            return sprites[2][2];//.getSubimage(0,0,width,height-3);
         }
         else if(statusX == StatusX.LEFTHOLD){
             return sprites[1][3];

@@ -1,6 +1,7 @@
 package gameProject.MapBlocks;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +12,7 @@ import java.awt.*;
  */
 public class Wall extends MapBlock{
 
-    public Wall(Point p, Dimension d) {
+    public Wall(Point2D.Double p, Dimension d) {
         super(p, d);
         stopBehavior = new StopForeverBehavior(this);
     }

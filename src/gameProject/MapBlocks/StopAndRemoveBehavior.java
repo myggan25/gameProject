@@ -32,16 +32,16 @@ public class StopAndRemoveBehavior implements StopBehavior {
                 countedOne = true;
             }
             if(currentObj.contains(obj.getMinX(), obj.getY() + obj.getHeight() / 2)){
-                obj.setLocation((int)currentObj.getMaxX(),(int)obj.getY());
+                obj.setLocation(currentObj.getMaxX(),obj.getY());
             }
             else if(currentObj.contains(obj.getMaxX(), obj.getY() + obj.getHeight() / 2)){
-                obj.setLocation((int)currentObj.getMinX()-(int)obj.getWidth(),(int)obj.getY());
+                obj.setLocation(currentObj.getMinX()-obj.getWidth(),(int)obj.getY());
             }
             else if(currentObj.contains(obj.getX() + obj.getWidth() / 2, obj.getMinY())){
-                obj.setLocation((int)obj.getX(),(int)currentObj.getMaxY());
+                obj.setLocation(obj.getX(),currentObj.getMaxY());
             }
             else if(currentObj.contains(obj.getX() + obj.getWidth() / 2, obj.getMaxY())){
-                obj.setLocation((int)obj.getX(), (int)currentObj.getMinY()-(int)obj.getHeight());
+                obj.setLocation(obj.getX(), currentObj.getMinY()-(int)obj.getHeight());
             }
         }
         else if( counterToDelete == 0){

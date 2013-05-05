@@ -1,6 +1,9 @@
 package gameProject;
 
 import java.awt.*;
+import java.awt.geom.Dimension2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,14 +12,21 @@ import java.awt.*;
  * Time: 9:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class GameObject extends Rectangle{
-    public GameObject(Point p, Dimension d){
-        super(p, d);
-    }
-    public GameObject(int x, int y, int width, int height){
-        super(x, y, width, height);
-    }
+public class GameObject extends Rectangle2D.Double{
 
+    public GameObject(Point2D.Double p, Dimension d){
+        super(p.getX(),p.getY(), d.getWidth(),d.getHeight());
+    }
+    public void setLocation(double x, double y){
+        this.x = x;
+        this.y = y;
+    }
+    public void setBounds(double x, double y, double width, double height){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
 
     //Cool stuff that should be made to a new object
     /*public void jumpThrough(GameObject obj){
