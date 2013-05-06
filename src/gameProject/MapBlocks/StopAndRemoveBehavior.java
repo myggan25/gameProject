@@ -31,6 +31,7 @@ public class StopAndRemoveBehavior implements StopBehavior {
                 counterToDelete -=1;
                 countedOne = true;
             }
+            obj.setRemovable();
             if(currentObj.contains(obj.getMinX(), obj.getY() + obj.getHeight() / 2)){
                 obj.setLocation(currentObj.getMaxX(),obj.getY());
             }
@@ -46,6 +47,7 @@ public class StopAndRemoveBehavior implements StopBehavior {
         }
         else if( counterToDelete == 0){
             currentObj.setBounds(0, 0, 0, 0);
+            currentObj.setRemovable();
             play();
         }
     }

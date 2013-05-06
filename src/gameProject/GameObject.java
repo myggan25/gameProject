@@ -12,7 +12,7 @@ import java.awt.geom.Rectangle2D;
  * Time: 9:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class GameObject extends Rectangle2D.Double{
+public abstract class GameObject extends Rectangle2D.Double{
 
     public GameObject(Point2D.Double p, Dimension d){
         super(p.getX(),p.getY(), d.getWidth(),d.getHeight());
@@ -28,6 +28,8 @@ public class GameObject extends Rectangle2D.Double{
         this.height = height;
     }
 
+    public abstract boolean isRemovable();
+    public abstract void setRemovable();
     //Cool stuff that should be made to a new object
     /*public void jumpThrough(GameObject obj){
         if(this.intersects(obj)){

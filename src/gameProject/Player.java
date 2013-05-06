@@ -180,5 +180,15 @@ public class Player extends GameObject{
         }
         this.setLocation((int)this.getX()+(int)velocity.getX(),(int)this.getY());
     }
+    @Override
+    public boolean isRemovable(){
+        return false;
+    }
+
+    @Override
+    public void setRemovable() {
+        //Will only be used if the player eventually dies, and if the player dies it is unnecessary anyway
+    }
+
 
 }

@@ -12,6 +12,7 @@ import java.lang.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import javax.swing.*;
 
 public class GameMain extends JFrame {     // main class for the game as a Swing application
@@ -28,7 +29,6 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
     // Define instance variables for the game objects
     private GameStartMenu startMenu;
     private Player player;
-    private PlayerBox playerBox;
     private ArrayList<Bullet> bullets;
     /*private ArrayList<Wall> walls;
     private ArrayList<Gravel> gravels;
@@ -98,16 +98,18 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
         bullets = new ArrayList<Bullet>();
         //bullet = new Bullet(200,200);
         //playerBox = new PlayerBox(100,100,100,100);
-        gameState = gameState.PLAYING;
+
         //mapBlocks.add(new Wall(new Point(300, 300), new Dimension(200, 200)));
         //mapBlocks.add(new Gravel(new Point(100,100), new Dimension(50,50)));
+        //TODO:: Add a map class and a mapmaker class.
         for(int i=0; i<CANVAS_WIDTH;i+=50){
             for(int j=0; j<CANVAS_HEIGHT;j+=50){
                 if(!(i==0 && j==0)){
-                    mapBlocks.add(new Gravel(new Point2D.Double(i,j), new Dimension(50,50)));
+                    mapBlocks.add(new Gravel(new Point2D.Double(i,j)));
                 }
             }
         }
+        gameState = gameState.PLAYING;
         // Game loop
         long beginTime, timeTaken, timeLeft;
         while (true) {
@@ -133,34 +135,34 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
 
     // Update the gameState and position of all the game objects,
     // detect collisions and provide responses.
-    public synchronized void gameUpdate() {
+    public void gameUpdate() {
         player.handleX();
         player.handleY();
-        //playerBox.jumpThrough(player);
-        //playerBox.cannotIntersect(player);
-        /*for(Wall wall : walls){
-            wall.block(player);
-        }
-        for(Gravel gravel : gravels){
-            gravel.block(player);
-        }*/
-
-        //System.out.println("Update");
-        for(MapBlock mapBlock : mapBlocks){
+        ListIterator<MapBlock> iterBlocks = mapBlocks.listIterator();
+        MapBlock mapBlock;
+        while(iterBlocks.hasNext()){
+            mapBlock = iterBlocks.next();
             mapBlock.performStop(player);
             if(!bullets.isEmpty()){
                 for(Bullet bullet : bullets){
                     mapBlock.performStop(bullet);
                 }
             }
-        }
-        StopAndRemoveBehavior.resetCounted();
-        if(!bullets.isEmpty()){
-            for(Bullet bullet : bullets){
-                bullet.closeInToTarget();
+            if(mapBlock.isRemovable()){
+                iterBlocks.remove();
             }
         }
+        StopAndRemoveBehavior.resetCounted();
 
+        ListIterator<Bullet> iterBullets = bullets.listIterator();
+        Bullet bullet;
+        while(iterBullets.hasNext()){
+            bullet = iterBullets.next();
+            if(bullet.isRemovable()){
+                iterBullets.remove();
+            }
+            bullet.closeInToTarget();
+        }
     }
 
     // Refresh the display. Called back via rapaint(), which invoke the paintComponent().
@@ -180,22 +182,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                 }
                 break;
             case PLAYING:
-                //g2d.fill(player);
-                //g2d.fill(playerBox);
-                /*if(player.turnedLeft()){
-                    //If the player is turned left make the image mirrored so it looks right.
-                    g2d.drawImage(player.getImage(),(int)player.getMaxX(),(int)player.getMinY(),(int)player.getMinX(),(int)player.getMaxY(), 0, 0, (int)player.getWidth(),(int)player.getHeight(),null);
-                }*/
                 g2d.drawImage(player.getImage(), (int) player.getX(), (int) player.getY(), null);
-
-                /*for(Wall wall : walls ){
-                    g2d.fill(new RoundRectangle2D.Float((float) wall.getX(), (float) wall.getY(), (float) wall.getWidth(), (float) wall.getHeight(), 50, 50));
-                    //g2d.fill(wall);
-                }
-                g2d.setColor(Color.DARK_GRAY);
-                for(Gravel gravel : gravels){
-                    g2d.fill(gravel);
-                }*/
                 for(MapBlock mapBlock : mapBlocks){
                     if(mapBlock instanceof Wall){
                         g2d.setColor(Color.BLUE);
@@ -211,13 +198,8 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
                 if(!bullets.isEmpty()){
                     for(Bullet bullet : bullets){
                         g2d.draw(bullet);
-                        //g2d.draw(new Line2D.Double(bullet.getX(),bullet.getY(),
-                        //        bullet.getgX(),bullet.getY()));
-                        /*g2d.draw(new Line2D.Double(bullet.getMovingX(),bullet.getMovingY(),
-                                bullet.getTargetX(),bullet.getTargetY()));*/
                     }
                 }
-                //g2d.draw(new Line2D.Double(bullet.x,bullet.y,bullet.x,bullet.y));
                 break;
             case PAUSED:
                 // ......
@@ -289,6 +271,7 @@ public class GameMain extends JFrame {     // main class for the game as a Swing
             }
         }
         else if(gameState == GameState.PLAYING){
+            //TODO:: Make the bullets dissapear from arraylist when they hit object. Can be the reason to thrown: ConcurrentModificationException
             bullets.add(new Bullet(new Point2D.Double(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2),
                     new Point2D.Double((double)e.getX(),(double)e.getY())));
             //bullets.add(new Bullet(player.getX()+player.getWidth()/2,player.getY()+player.getHeight()/2, (double)e.getX(),(double)e.getY()));

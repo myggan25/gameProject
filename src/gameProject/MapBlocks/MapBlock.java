@@ -12,7 +12,7 @@ import java.awt.geom.Point2D;
  * Time: 7:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MapBlock extends GameObject {
+public abstract class MapBlock extends GameObject {
     protected StopBehavior stopBehavior;
 
     public MapBlock(Point2D.Double p, Dimension d){
@@ -24,4 +24,6 @@ public class MapBlock extends GameObject {
     public void performStop(GameObject obj){
         stopBehavior.stop(obj);
     }
+
+
 }

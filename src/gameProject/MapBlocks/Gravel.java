@@ -16,9 +16,10 @@ import sun.audio.AudioStream;
  */
 public class Gravel extends MapBlock{
     private AudioStream audioStream;
-
+    private boolean removable;
     public Gravel(Point2D.Double p, Dimension d) {
         super(p, d);
+        removable = false;
         try{
             InputStream in = new FileInputStream("dig.wav");
             audioStream = new AudioStream(in);
@@ -26,7 +27,17 @@ public class Gravel extends MapBlock{
             System.out.println("FAIL");
         }
         stopBehavior = new StopAndRemoveBehavior(this,20,audioStream);
-
+    }
+    public Gravel(Point2D.Double p){
+        this(p,new Dimension(50,50));
+    }
+    @Override
+    public void setRemovable(){
+        removable = true;
+    }
+    @Override
+    public boolean isRemovable(){
+        return removable;
     }
 
 
