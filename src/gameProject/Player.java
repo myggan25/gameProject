@@ -20,8 +20,10 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class Player extends GameObject{
+    private String name;
+    private int id;
     final int startVelocity = 3;
-    private String sprite = "LuffySpriteSheet.png";
+    private String sprite = "img/LuffySpriteSheet.png";
     private BufferedImage image;
     private int imageCols = 5;
     private int imageRows = 6;
@@ -38,12 +40,12 @@ public class Player extends GameObject{
     protected StatusX statusX;
     protected StatusY statusY;
 
-    public Player(){
-        this(0,0,50,50);//these are the values that fit LuffySpriteSheet.png
-    }
 
-    public Player(Point2D.Double p, Dimension d) {
+
+    public Player(String name, int id, Point2D.Double p, Dimension d) {
         super(p,d);
+        this.name = name;
+        this.id = id;
         velocity = new Velocity(0.0, 0.0);
         acceleration = new Acceleration(0.0, 0.0, 0.01);
         statusX = StatusX.STILL;
@@ -53,21 +55,37 @@ public class Player extends GameObject{
         try {
             image = ImageIO.read(new File(sprite));
         } catch (IOException ex) {
-            System.out.println("FAIL");
+            System.out.println("Image " + sprite+ " not found");
         }
         for(int i=0; i<imageRows; i++){
             for(int j=0; j<imageCols; j++){
                 sprites[i][j] = image.getSubimage(j*(int)width,i*(int)height,(int)width,(int)height);
+                //sprites[i][j] = image.getSubimage(j*(int)width,i*(int)height,(int)width,(int)height);
                 //sprites[i] = image.getSubimage(i*width,0,width,height);
             }
 
         }
     }
-    public Player(double x, double y, double width, double height) {
-        this(new Point2D.Double(x,y),new Dimension((int)width,(int)height));
+    public Player(String name, int id, double x, double y, double width, double height) {
+        this(name, id, new Point2D.Double(x,y),new Dimension((int)width,(int)height));
+    }
+    public Player(String name, int id){
+        this(name, id, 0,0,50,50);//these are the values that fit LuffySpriteSheet.png
     }
 
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() {
 
+        return id;
+    }
     public Image getImage(){
         if(statusX==StatusX.STILL && statusY==StatusY.STILL){
             return sprites[0][1];
@@ -148,6 +166,9 @@ public class Player extends GameObject{
         }
     }
 
+    /**
+     * This method is called every gameUpdate and updates the players y-state
+     */
     public void handleY(){
         if(velocity.y > 1 && statusY == StatusY.DOWNRELEASED){
             acceleration.y += acceleration.start;
@@ -164,6 +185,9 @@ public class Player extends GameObject{
         }
         this.setLocation((int)this.getX(),(int)this.getY()+(int)velocity.getY());
     }
+    /**
+     * This method is called every gameUpdate and updates the players x-state
+     */
     public void handleX(){
         if(velocity.x > 1 && statusX == StatusX.RIGHTRELEASED){
             acceleration.x += acceleration.start;
@@ -188,6 +212,7 @@ public class Player extends GameObject{
     @Override
     public void setRemovable() {
         //Will only be used if the player eventually dies, and if the player dies it is unnecessary anyway
+        //Might be used when network are introduced
     }
 
 

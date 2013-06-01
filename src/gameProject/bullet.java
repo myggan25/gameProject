@@ -40,7 +40,8 @@ public class Bullet extends GameObject{
 
     /**
      * This function makes the bullet move closer to the pressed
-     * target or further away when it have passed.
+     * target or further away when it have passed. Called every
+     * game update.
      */
     public void closeInToTarget(){
 
